@@ -45,6 +45,22 @@ def speed_in_wpm(text, start_time):
 
     return "{0:.2f}".format(wpm)
 
+def speed_in_cpm(text, start_time):
+    """Calculate typing speed in CPM.
+
+    Args:
+        text (list): List of words from sample text.
+        start_time (float): The time when user starts typing
+            the sample text.
+
+    Returns:
+        string: Speed in CPM up to 2 decimal places.
+    """
+    time_taken = timer.get_elapsed_minutes_since_first_keypress(start_time)
+    cpm = 60 * len(" ".join(text)) / time_taken
+
+    return "{0:.2f}".format(cpm)
+
 
 def number_of_lines_to_fit_text_in_window(string, window_width):
     """Count number of lines required for displaying text.

@@ -12,6 +12,7 @@ from mitype.calculations import (
     get_space_count_after_ith_word,
     number_of_lines_to_fit_text_in_window,
     speed_in_wpm,
+    speed_in_cpm,
     word_wrap,
 )
 from mitype.commandline import load_from_database, resolve_commandline_arguments
@@ -66,6 +67,7 @@ class App:
         self.test_complete = False
 
         self.current_speed_wpm = 0
+        self.current_speed_cpm = 0
         self.accuracy = 0
         self.time_taken = 0
 
@@ -289,16 +291,26 @@ class App:
             self.start_time
         )
         current_wpm = 0
+        current_cpm = 0
         if total_time != 0:
             current_wpm = 60 * len(self.current_string.split()) / total_time
+            current_cpm = 60 * len(self.current_string) / total_time
 
         win.addstr(
             0,
-            int(self.window_width) - 14,
+            int(self.window_width) - 30,
             " " + "{0:.2f}".format(current_wpm) + " ",
             curses.color_pair(5),
         )
         win.addstr(" WPM ")
+
+        win.addstr(
+            0,
+            int(self.window_width) - 14,
+            " " + "{0:.2f}".format(current_cpm) + " ",
+            curses.color_pair(5),
+        )
+        win.addstr(" CPM ")
 
     def update_state(self, win):
         """Report on typing session results.
@@ -331,6 +343,7 @@ class App:
             win.addstr(self.line_count, 0, " Your typing speed is ")
             if self.mode == 0:
                 self.current_speed_wpm = speed_in_wpm(self.tokens, self.start_time)
+                self.current_speed_cpm = speed_in_cpm(self.tokens, self.start_time)
                 wrongly_typed_chars = self.total_chars_typed - len(
                     self.text_without_spaces
                 )
@@ -341,6 +354,9 @@ class App:
 
             win.addstr(" " + self.current_speed_wpm + " ", curses.color_pair(6))
             win.addstr(" WPM ")
+
+            win.addstr(" " + self.current_speed_cpm + " ", curses.color_pair(6))
+            win.addstr(" CPM ")
 
             win.addstr(self.window_height - 1, 0, " " * (self.window_width - 1))
 
@@ -365,7 +381,7 @@ class App:
             if not self.test_complete:
                 win.refresh()
                 save_history(
-                    self.text_id, self.current_speed_wpm, "{:.2f}".format(self.accuracy)
+                    self.text_id, self.current_speed_wpm, self.current_speed_cpm, "{:.2f}".format(self.accuracy)
                 )
                 self.test_complete = True
         win.refresh()
@@ -380,6 +396,7 @@ class App:
         self.start_time = 0
         self.i = 0
         self.current_speed_wpm = 0
+        self.current_speed_cpm = 0
         self.total_chars_typed = 0
         self.accuracy = 0
         self.time_taken = 0
@@ -398,11 +415,19 @@ class App:
 
         win.addstr(
             0,
-            int(self.window_width) - 14,
+            int(self.window_width) - 30,
             " " + str(self.current_speed_wpm) + " ",
             curses.color_pair(5),
         )
         win.addstr(" WPM ")
+        
+        win.addstr(
+            0,
+            int(self.window_width) - 14,
+            " " + str(self.current_speed_cpm) + " ",
+            curses.color_pair(5),
+        )
+        win.addstr(" CPM ")
 
         self.setup_print(win)
 
@@ -442,6 +467,12 @@ class App:
             self.window_height - 1,
             0,
             " WPM: " + self.current_speed_wpm + " ",
+            curses.color_pair(6),
+        )
+        win.addstr(
+            self.window_height - 1,
+            0,
+            " CPM: " + self.current_speed_cpm + " ",
             curses.color_pair(6),
         )
 

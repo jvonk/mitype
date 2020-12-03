@@ -48,7 +48,7 @@ def show_history(number_of_records):
 
     print("Last", number_of_records, "records:")
 
-    print("ID\tWPM\tDATE\t\tTIME")
+    print("ID\tWPM\tCPM\tDATE\t\tTIME")
 
     start_count = 0
     if number_of_records < total_records and number_of_records != -1:
@@ -58,7 +58,7 @@ def show_history(number_of_records):
         print(formatted_row_data)
 
 
-def save_history(text_id, current_speed_wpm, accuracy):
+def save_history(text_id, current_speed_wpm, current_speed_cpm, accuracy):
     """Save test stats to history file.
 
     Args:
@@ -78,7 +78,7 @@ def save_history(text_id, current_speed_wpm, accuracy):
         csv_history = csv.writer(history)
 
     if not file_exists:
-        row = ["ID", "WPM", "DATE", "TIME", "ACCURACY"]
+        row = ["ID", "WPM", "CPM", "DATE", "TIME", "ACCURACY"]
         csv_history.writerow(row)
 
     current_time = time.strftime("%H:%M:%S", time.localtime())
@@ -86,6 +86,7 @@ def save_history(text_id, current_speed_wpm, accuracy):
     test_data = [
         text_id,
         current_speed_wpm,
+        current_speed_cpm,
         date.today(),
         current_time,
         accuracy,
