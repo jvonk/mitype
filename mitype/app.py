@@ -294,7 +294,7 @@ class App:
         current_cpm = 0
         if total_time != 0:
             current_wpm = 60 * len(self.current_string.split()) / total_time
-            current_cpm = 60 * len(self.current_string) / total_time
+            current_cpm = 60 * len(self.current_string) / 5 / total_time
 
         win.addstr(
             0,

@@ -57,7 +57,7 @@ def speed_in_cpm(text, start_time):
         string: Speed in CPM up to 2 decimal places.
     """
     time_taken = timer.get_elapsed_minutes_since_first_keypress(start_time)
-    cpm = 60 * len(" ".join(text)) / time_taken
+    cpm = 60 * len(" ".join(text)) / 5 / time_taken
 
     return "{0:.2f}".format(cpm)
 
